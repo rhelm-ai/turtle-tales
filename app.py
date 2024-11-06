@@ -14,7 +14,39 @@ from flask import Flask, render_template, request, jsonify
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import openai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -46,7 +78,55 @@ import os
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from datetime import datetime
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -110,7 +190,55 @@ app = Flask(__name__)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Configure OpenAI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -158,7 +286,55 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Store history in memory (in production, you might want to use a database)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -206,6 +382,38 @@ story_history = []
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/')
 
 
@@ -222,7 +430,39 @@ story_history = []
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def home():
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -270,7 +510,55 @@ def home():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/generate-story', methods=['POST'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -302,7 +590,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     try:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -334,6 +654,22 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 
 
@@ -350,7 +686,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if not turtle_description:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -398,7 +766,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # Create the initial prompt for the story
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -446,7 +862,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # Make first API call to OpenAI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -478,7 +942,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             model="gpt-3.5-turbo",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -510,7 +1006,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 {"role": "system", "content": "You are a creative storyteller who writes fun, family-friendly stories about sea turtles. Include dialogue and vivid descriptions."},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -542,7 +1070,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             ],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -574,6 +1134,22 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             temperature=0.7
 
 
@@ -590,7 +1166,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -638,6 +1262,22 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         initial_story = initial_response.choices[0].message.content.strip()
 
 
@@ -670,7 +1310,55 @@ def generate_story():
 
 
 
-        # Create the refinement prompt - being very specific about length
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # Create the refinement prompt - being very specific about length and completion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -702,7 +1390,6 @@ def generate_story():
 
 
 
-            "Rewrite this story to be more magical and engaging. The story MUST be complete and MUST NOT exceed 100 words. "
 
 
 
@@ -718,7 +1405,56 @@ def generate_story():
 
 
 
-            "Focus on the most captivating elements and ensure the story has a proper ending: \n\n"
+
+            "Rewrite this story to be more magical and engaging. The story MUST be complete and MUST be between 80-90 words. "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            "Focus on the most captivating elements and ensure the story has a clear beginning, middle, and end. "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -750,7 +1486,54 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -798,7 +1581,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         refined_response = openai.ChatCompletion.create(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -830,6 +1645,22 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             messages=[
 
 
@@ -846,7 +1677,39 @@ def generate_story():
 
 
 
-                {"role": "system", "content": "You are a master storyteller who creates magical tales with vivid imagery. You must write complete stories that are exactly 100 words with proper endings."},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {"role": "system", "content": "You are a master storyteller who creates magical tales with vivid imagery. You must write complete stories between 80-90 words with proper endings. Never leave a story unfinished."},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -878,6 +1741,22 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             ],
 
 
@@ -894,7 +1773,39 @@ def generate_story():
 
 
 
-            max_tokens=150,  # Reduced to ensure no cutoff
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            max_tokens=200,  # Increased to ensure no cutoff
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -911,6 +1822,22 @@ def generate_story():
 
 
             temperature=0.8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -958,7 +1885,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # Extract the refined story
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1006,7 +1981,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # Add to history
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1038,7 +2061,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         story_entry = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1070,7 +2125,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             'story': refined_story,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1102,7 +2189,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1150,6 +2269,38 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # Keep only the last 10 stories
 
 
@@ -1166,7 +2317,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if len(story_history) > 10:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1214,7 +2397,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         return jsonify({
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1246,7 +2477,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             'history': story_history
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1294,7 +2557,55 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     except openai.error.OpenAIError as e:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1326,7 +2637,39 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     except Exception as e:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1374,6 +2717,38 @@ def generate_story():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
 
 
@@ -1390,7 +2765,39 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     app.run(debug=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
