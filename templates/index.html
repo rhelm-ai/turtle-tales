@@ -1,80 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Generate magical stories about sea turtles with our AI-powered story generator">
-    <title>Sea Turtle Story Generator | Create Magical Ocean Tales</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="wave-background"></div>
-    <div class="container">
-        <h1>
-            <span class="wave">🌊</span> 
-            Sea Turtle Story Generator 
-            <span class="turtle">🐢</span>
-        </h1>
-        
-        <div class="story-form" role="form">
-            <label for="turtle-description" class="visually-hidden">
-                Describe your sea turtle
-            </label>
-            <textarea 
-                id="turtle-description" 
-                placeholder="Describe your magical sea turtle (e.g., A wise old green sea turtle with ancient markings on its shell and eyes that sparkle like stars...)"
-                rows="4"
-                aria-label="Enter your sea turtle description here"></textarea>
-            <button id="generate-btn" aria-label="Generate story">
-                <span class="button-text">✨ Create Magical Story ✨</span>
-                <span class="button-loading hidden">
-                    <span class="loading-dots">...</span>
-                </span>
-            </button>
-        </div>
-
-        <div id="loading" class="hidden" role="status" aria-live="polite">
-            <div class="loading-animation">
-                <span>🐢</span>
-                <span>Creating your turtle tale</span>
-                <span class="loading-dots">...</span>
-            </div>
-        </div>
-
-        <div id="error-message" class="hidden" role="alert" aria-live="assertive">
-        </div>
-
-        <div id="current-story" class="story-container hidden" aria-live="polite">
-            <h2>✨ Your Magical Turtle Tale ✨</h2>
-            <div id="story-content" class="story-text"></div>
-        </div>
-
-        <div id="history-section">
-            <h2>🌟 Previous Adventures 🌟</h2>
-            <div id="story-history">
-                {% for entry in history %}
-                <div class="history-entry">
-                    <p class="timestamp">
-                        <span class="icon">📅</span> 
-                        {{ entry.timestamp }}
-                    </p>
-                    <p class="description">
-                        <span class="icon">🐢</span> 
-                        <strong>The Turtle:</strong> 
-                        {{ entry.description }}
-                    </p>
-                    <p class="story">
-                        <span class="icon">📖</span> 
-                        {{ entry.story }}
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate magical stories about sea turtles with our AI-powered story generator">
+    <title>Sea Turtle Story Generator | Create Magical Ocean Tales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="wave-background"></div>
+    <div class="container">
+        <h1>
+            <span class="wave">🌊</span> 
+            Sea Turtle Story Generator 
+            <span class="turtle">🐢</span>
+        </h1>
+        
+        <div class="story-form" role="form">
+            <label for="turtle-description" class="visually-hidden">
+                Describe your sea turtle
+            </label>
+            <textarea 
+                id="turtle-description" 
+                placeholder="Describe your magical sea turtle (e.g., A wise old green sea turtle with ancient markings on its shell and eyes that sparkle like stars...)"
+                rows="4"
+                aria-label="Enter your sea turtle description here"></textarea>
+            <button id="generate-btn" aria-label="Generate story">
+                <span class="button-text">✨ Create Magical Story ✨</span>
+                <span class="button-loading hidden">
+                    <span class="loading-dots">...</span>
+                </span>
+            </button>
+        </div>
+
+        <div id="loading" class="hidden" role="status" aria-live="polite">
+            <div class="loading-animation">
+                <span class="loading-text">🐢 Creating your turtle tale...</span>
+            </div>
+        </div>
+
+        <div id="error-message" class="hidden" role="alert" aria-live="assertive">
+        </div>
+
+        <div id="current-story" class="story-container hidden" aria-live="polite">
+            <h2>✨ Your Magical Turtle Tale ✨</h2>
+            <div id="story-content" class="story-text"></div>
+        </div>
+
+        <div id="history-section">
+            <h2>🌟 Previous Adventures 🌟</h2>
+            <div id="story-history">
+                {% for entry in history %}
+                <div class="history-entry">
+                    <p class="timestamp">
+                        <span class="icon">📅</span> 
+                        {{ entry.timestamp }}
+                    </p>
+                    <p class="description">
+                        <span class="icon">🐢</span> 
+                        <strong>The Turtle:</strong> 
+                        {{ entry.description }}
+                    </p>
+                    <p class="story">
+                        <span class="icon">📖</span> 
+                        {{ entry.story }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
