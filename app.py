@@ -11,12 +11,11 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 # Store history in memory (in production, you might want to use a database)
 story_history = []
 
-# HTTPS redirect middleware
+# HTTPS redirection and auth token extraction
 @app.before_request
 def before_request():
-    # Only trigger on HTTP requests to the production environment
-    if not request.is_secure and 'DYNO' in os.environ:
-        url = request.url.replace('http://', 'https://', 1)
+    if not request.is_secure and app.env != "development":
+        url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 
 
