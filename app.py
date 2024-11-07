@@ -198,7 +198,19 @@ def generate_story():
 
         # Generate image based on the story
 
+        print("Attempting to generate image...")
+
         image_base64 = generate_image(refined_story)
+
+        
+
+        if image_base64 is None:
+
+            print("Failed to generate image")
+
+        else:
+
+            print("Successfully generated image")
 
 
 
@@ -244,9 +256,13 @@ def generate_story():
 
     except openai.error.OpenAIError as e:
 
+        print(f"OpenAI error: {str(e)}")
+
         return jsonify({'error': f'OpenAI API error: {str(e)}'}), 500
 
     except Exception as e:
+
+        print(f"Unexpected error: {str(e)}")
 
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 
