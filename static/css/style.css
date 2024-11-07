@@ -767,3 +767,123 @@ button:hover {
     display: none;
 
 }
+
+
+
+/* Add this to your existing CSS */
+
+.share-buttons {
+
+    display: flex;
+
+    gap: 1rem;
+
+    margin-top: 2rem;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+}
+
+
+
+.share-buttons.hidden {
+
+    display: none;
+
+}
+
+
+
+.share-btn {
+
+    flex: 1;
+
+    min-width: 200px;
+
+    max-width: 250px;
+
+    padding: 12px 20px;
+
+    border-radius: 15px;
+
+    font-size: 1rem;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: all var(--transition-speed);
+
+    border: none;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.5rem;
+
+}
+
+
+
+.story-btn {
+
+    background: linear-gradient(45deg, #2196F3, #4CAF50);
+
+}
+
+
+
+.image-btn {
+
+    background: linear-gradient(45deg, #9C27B0, #E91E63);
+
+}
+
+
+
+.both-btn {
+
+    background: linear-gradient(45deg, #FF9800, #F44336);
+
+}
+
+
+
+.share-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
+}
+
+
+
+/* Update responsive design for share buttons */
+
+@media (max-width: 768px) {
+
+    .share-buttons {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+
+    .share-btn {
+
+        max-width: none;
+
+    }
+
+}

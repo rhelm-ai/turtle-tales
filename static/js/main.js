@@ -116,6 +116,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 storyImage.classList.remove('hidden');
 
+                
+
+                // Show the share buttons
+
+                const shareButtons = document.querySelector('.share-buttons');
+
+                shareButtons.classList.remove('hidden');
+
             } else {
 
                 storyImage.classList.add('hidden');
