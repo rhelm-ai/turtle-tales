@@ -348,3 +348,17 @@ button:hover {
         break-inside: avoid;
     }
 }
+
+.roket-logo {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    opacity: 0.4;
+    z-index: 999;
+    transition: opacity 0.3s ease;
+}
+
+.roket-logo:hover {
+    opacity: 0.8;
+}
