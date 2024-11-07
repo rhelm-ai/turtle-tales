@@ -12,6 +12,8 @@ import base64
 
 from io import BytesIO
 
+from functools import wraps
+
 
 
 app = Flask(__name__)
@@ -32,17 +34,39 @@ story_history = []
 
 
 
+# Store the auth token (in production, you might want to use a more secure method)
+
+current_auth_token = None
+
+
+
 # HTTPS redirection and auth token extraction
 
 @app.before_request
 
 def before_request():
 
+    global current_auth_token
+
+    
+
+    # Handle HTTPS redirect
+
     if not request.is_secure and app.env != "development":
 
         url = request.url.replace("http://", "https://", 1)
 
         return redirect(url, code=301)
+
+    
+
+    # Extract Bearer token
+
+    auth_header = request.headers.get('Authorization')
+
+    if auth_header and auth_header.startswith('Bearer '):
+
+        current_auth_token = auth_header.split(' ')[1]
 
 
 
@@ -263,6 +287,78 @@ def generate_story():
     except Exception as e:
 
         print(f"Unexpected error: {str(e)}")
+
+        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+
+
+
+@app.route('/send-to-chat', methods=['POST'])
+
+def send_to_chat():
+
+    try:
+
+        if not current_auth_token:
+
+            return jsonify({'error': 'No authentication token available'}), 401
+
+
+
+        story = request.json.get('story')
+
+        if not story:
+
+            return jsonify({'error': 'No story provided'}), 400
+
+
+
+        # Send to Einstein Chat API
+
+        einstein_api_url = 'https://api.einstein-chat.com/api/tool/webhook'
+
+        payload = {
+
+            "tool_id": "672ce59cbe603d1ded077a3e",
+
+            "tool_input": "Generate Turtle Tale",
+
+            "tool_output": story,
+
+            "auth_token": current_auth_token
+
+        }
+
+
+
+        response = requests.post(
+
+            einstein_api_url,
+
+            json=payload,
+
+            headers={
+
+                'accept': 'application/json',
+
+                'Content-Type': 'application/json'
+
+            }
+
+        )
+
+
+
+        if response.ok:
+
+            return jsonify({'message': 'Story sent successfully'})
+
+        else:
+
+            return jsonify({'error': f'Failed to send story: {response.text}'}), response.status_code
+
+
+
+    except Exception as e:
 
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 

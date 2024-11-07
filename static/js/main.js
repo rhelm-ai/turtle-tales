@@ -228,4 +228,90 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
+
+
+    // Add click handler for the "Send Story to Chat" button
+
+    const sendStoryBtn = document.querySelector('.story-btn');
+
+    if (sendStoryBtn) {
+
+        sendStoryBtn.addEventListener('click', async function() {
+
+            const storyContent = document.getElementById('story-content').textContent;
+
+            
+
+            try {
+
+                const response = await fetch('/send-to-chat', {
+
+                    method: 'POST',
+
+                    headers: {
+
+                        'Content-Type': 'application/json',
+
+                    },
+
+                    body: JSON.stringify({ story: storyContent })
+
+                });
+
+
+
+                const data = await response.json();
+
+
+
+                if (!response.ok) {
+
+                    throw new Error(data.error || 'Failed to send story to chat');
+
+                }
+
+
+
+                // Show success message
+
+                showSuccess('Story sent to chat successfully! ✨');
+
+
+
+            } catch (error) {
+
+                showError(error.message);
+
+            }
+
+        });
+
+    }
+
+
+
+    // Add success message function
+
+    function showSuccess(message) {
+
+        const successDiv = document.createElement('div');
+
+        successDiv.className = 'success-message';
+
+        successDiv.textContent = message;
+
+        document.querySelector('.story-container').appendChild(successDiv);
+
+        
+
+        // Remove success message after 3 seconds
+
+        setTimeout(() => {
+
+            successDiv.remove();
+
+        }, 3000);
+
+    }
+
 });
