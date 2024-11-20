@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect, session
 
 import openai
 
@@ -18,6 +18,8 @@ from functools import wraps
 
 app = Flask(__name__)
 
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'dev-secret-key')
+
 
 
 # Configure OpenAI and Hugging Face
@@ -34,21 +36,11 @@ story_history = []
 
 
 
-# Store the auth token (in production, you might want to use a more secure method)
-
-current_auth_token = None
-
-
-
 # HTTPS redirection and auth token extraction
 
 @app.before_request
 
 def before_request():
-
-    global current_auth_token
-
-    
 
     # Handle HTTPS redirect
 
@@ -60,13 +52,15 @@ def before_request():
 
     
 
-    # Extract Bearer token
+    # Extract Bearer token and store in session
 
     auth_header = request.headers.get('Authorization')
 
     if auth_header and auth_header.startswith('Bearer '):
 
-        current_auth_token = auth_header.split(' ')[1]
+        session['auth_token'] = auth_header.split(' ')[1]
+
+        print(f"Received and stored auth token: {session['auth_token'][:10]}...")
 
 
 
@@ -298,9 +292,13 @@ def send_to_chat():
 
     try:
 
-        if not current_auth_token:
+        # Get token from session instead of global variable
 
-            return jsonify({'error': 'No authentication token available'}), 401
+        auth_token = session.get('auth_token')
+
+        if not auth_token:
+
+            return jsonify({'error': 'No authentication token available. Please ensure you have proper authorization.'}), 401
 
 
 
@@ -309,6 +307,10 @@ def send_to_chat():
         if not story:
 
             return jsonify({'error': 'No story provided'}), 400
+
+
+
+        print(f"Sending story to chat with token: {auth_token[:10]}...")
 
 
 
@@ -324,7 +326,7 @@ def send_to_chat():
 
             "tool_output": story,
 
-            "auth_token": current_auth_token
+            "auth_token": auth_token
 
         }
 
@@ -354,13 +356,21 @@ def send_to_chat():
 
         else:
 
-            return jsonify({'error': f'Failed to send story: {response.text}'}), response.status_code
+            error_message = f"Failed to send story. Status: {response.status_code}, Response: {response.text}"
+
+            print(error_message)
+
+            return jsonify({'error': error_message}), response.status_code
 
 
 
     except Exception as e:
 
-        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+        error_message = f'An unexpected error occurred: {str(e)}'
+
+        print(error_message)
+
+        return jsonify({'error': error_message}), 500
 
 
 
