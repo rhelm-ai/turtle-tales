@@ -50,7 +50,7 @@ def before_request():
 
     
 
-    # Extract Bearer token from the query parameter
+    # Extract token from query parameter
 
     token = request.args.get('token')
 
@@ -116,7 +116,11 @@ def generate_image(story):
 
 def home():
 
-    return render_template('index.html', history=story_history)
+    # Get token from query parameter and pass it to template
+
+    token = request.args.get('token')
+
+    return render_template('index.html', history=story_history, token=token)
 
 
 
@@ -290,9 +294,19 @@ def send_to_chat():
 
     try:
 
-        # Get token from session
+        # Try to get token from multiple sources
 
-        auth_token = session.get('auth_token')
+        auth_token = (
+
+            request.json.get('token') or  # First try JSON body
+
+            request.args.get('token') or   # Then try query parameters
+
+            session.get('auth_token')      # Finally try session
+
+        )
+
+
 
         if not auth_token:
 
@@ -305,6 +319,10 @@ def send_to_chat():
         if not story:
 
             return jsonify({'error': 'No story provided'}), 400
+
+
+
+        print(f"Sending story to chat with token: {auth_token[:10]}...")  # Debug log
 
 
 

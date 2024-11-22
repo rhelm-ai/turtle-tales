@@ -230,7 +230,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    // Add click handler for the "Send Story to Chat" button
+    // Add this function to get URL parameters
+
+    function getUrlParameter(name) {
+
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+
+        var results = regex.exec(location.search);
+
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+
+    }
+
+
+
+    // Update the send story click handler
 
     const sendStoryBtn = document.querySelector('.story-btn');
 
@@ -239,6 +255,8 @@ document.addEventListener('DOMContentLoaded', function() {
         sendStoryBtn.addEventListener('click', async function() {
 
             const storyContent = document.getElementById('story-content').textContent;
+
+            const token = getUrlParameter('token'); // Get token from URL
 
             
 
@@ -254,7 +272,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     },
 
-                    body: JSON.stringify({ story: storyContent })
+                    body: JSON.stringify({ 
+
+                        story: storyContent,
+
+                        token: token  // Include token in request body
+
+                    })
 
                 });
 
