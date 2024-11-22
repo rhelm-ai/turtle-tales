@@ -12,13 +12,11 @@ import base64
 
 from io import BytesIO
 
-from functools import wraps
-
 
 
 app = Flask(__name__)
 
-app.secret_key = os.getenv('FLASK_SECRET_KEY', 'dev-secret-key')
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'dev-secret-key')  # Required for session
 
 
 
@@ -36,7 +34,7 @@ story_history = []
 
 
 
-# HTTPS redirection and auth token extraction
+# HTTPS redirection and token handling
 
 @app.before_request
 
@@ -52,13 +50,13 @@ def before_request():
 
     
 
-    # Extract Bearer token and store in session
+    # Extract Bearer token from the query parameter
 
-    auth_header = request.headers.get('Authorization')
+    token = request.args.get('token')
 
-    if auth_header and auth_header.startswith('Bearer '):
+    if token:
 
-        session['auth_token'] = auth_header.split(' ')[1]
+        session['auth_token'] = token
 
         print(f"Received and stored auth token: {session['auth_token'][:10]}...")
 
@@ -292,13 +290,13 @@ def send_to_chat():
 
     try:
 
-        # Get token from session instead of global variable
+        # Get token from session
 
         auth_token = session.get('auth_token')
 
         if not auth_token:
 
-            return jsonify({'error': 'No authentication token available. Please ensure you have proper authorization.'}), 401
+            return jsonify({'error': 'No authentication token available. Please refresh the page with a valid token.'}), 401
 
 
 
@@ -307,10 +305,6 @@ def send_to_chat():
         if not story:
 
             return jsonify({'error': 'No story provided'}), 400
-
-
-
-        print(f"Sending story to chat with token: {auth_token[:10]}...")
 
 
 
@@ -356,21 +350,13 @@ def send_to_chat():
 
         else:
 
-            error_message = f"Failed to send story. Status: {response.status_code}, Response: {response.text}"
-
-            print(error_message)
-
-            return jsonify({'error': error_message}), response.status_code
+            return jsonify({'error': f'Failed to send story: {response.text}'}), response.status_code
 
 
 
     except Exception as e:
 
-        error_message = f'An unexpected error occurred: {str(e)}'
-
-        print(error_message)
-
-        return jsonify({'error': error_message}), 500
+        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 
 
 
