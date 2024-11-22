@@ -40,6 +40,12 @@ story_history = []
 
 def before_request():
 
+    print("Request URL:", request.url)  # Debug log
+
+    print("Query parameters:", request.args)  # Debug log
+
+    
+
     # Handle HTTPS redirect
 
     if not request.is_secure and app.env != "development":
@@ -54,11 +60,13 @@ def before_request():
 
     token = request.args.get('token')
 
+    print("Token from query:", token)  # Debug log
+
     if token:
 
         session['auth_token'] = token
 
-        print(f"Received and stored auth token: {session['auth_token'][:10]}...")
+        print(f"Stored token in session: {token[:10]}...")  # Debug log
 
 
 
@@ -294,6 +302,14 @@ def send_to_chat():
 
     try:
 
+        print("Request JSON:", request.json)  # Debug log
+
+        print("Query params:", request.args)  # Debug log
+
+        print("Session:", dict(session))  # Debug log
+
+
+
         # Try to get token from multiple sources
 
         auth_token = (
@@ -305,6 +321,10 @@ def send_to_chat():
             session.get('auth_token')      # Finally try session
 
         )
+
+
+
+        print("Final token value:", auth_token[:10] if auth_token else None)  # Debug log
 
 
 
@@ -344,6 +364,10 @@ def send_to_chat():
 
 
 
+        print("Sending payload:", {**payload, 'auth_token': auth_token[:10] + '...'})  # Debug log
+
+
+
         response = requests.post(
 
             einstein_api_url,
@@ -362,6 +386,10 @@ def send_to_chat():
 
 
 
+        print("Einstein API response:", response.status_code, response.text)  # Debug log
+
+
+
         if response.ok:
 
             return jsonify({'message': 'Story sent successfully'})
@@ -373,6 +401,8 @@ def send_to_chat():
 
 
     except Exception as e:
+
+        print("Exception occurred:", str(e))  # Debug log
 
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 

@@ -260,7 +260,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             
 
+            console.log('Token from URL:', token); // Debug log
+
+            
+
             try {
+
+                console.log('Sending request with token:', token); // Debug log
 
                 const response = await fetch('/send-to-chat', {
 
@@ -276,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         story: storyContent,
 
-                        token: token  // Include token in request body
+                        token: token
 
                     })
 
@@ -284,7 +290,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+                console.log('Response status:', response.status); // Debug log
+
                 const data = await response.json();
+
+                console.log('Response data:', data); // Debug log
 
 
 
@@ -296,13 +306,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-                // Show success message
-
                 showSuccess('Story sent to chat successfully! ✨');
 
 
 
             } catch (error) {
+
+                console.error('Error:', error); // Debug log
 
                 showError(error.message);
 
