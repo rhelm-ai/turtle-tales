@@ -62,6 +62,10 @@ def before_request():
 
     print("Token from query:", token)  # Debug log
 
+    
+
+    # Store token in session if available
+
     if token:
 
         session['auth_token'] = token
@@ -310,27 +314,19 @@ def send_to_chat():
 
 
 
-        # Try to get token from multiple sources
+        # Get token from request body first, then session
 
-        auth_token = (
+        auth_token = request.json.get('token')
 
-            request.json.get('token') or  # First try JSON body
+        
 
-            request.args.get('token') or   # Then try query parameters
-
-            session.get('auth_token')      # Finally try session
-
-        )
-
-
-
-        print("Final token value:", auth_token[:10] if auth_token else None)  # Debug log
+        print("Token from request:", auth_token[:10] if auth_token else None)  # Debug log
 
 
 
         if not auth_token:
 
-            return jsonify({'error': 'No authentication token available. Please refresh the page with a valid token.'}), 401
+            return jsonify({'error': 'No authentication token provided'}), 401
 
 
 

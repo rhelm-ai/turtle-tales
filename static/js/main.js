@@ -230,17 +230,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    // Add this function to get URL parameters
+    // Update the URL parameter function to also check for parent window
 
     function getUrlParameter(name) {
 
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        try {
 
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            // First try to get from current URL
 
-        var results = regex.exec(location.search);
+            let value = new URLSearchParams(window.location.search).get(name);
 
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            
+
+            // If not found and we're in an iframe, try to get from parent
+
+            if (!value && window.parent !== window) {
+
+                // Try to get from parent's URL if possible
+
+                value = new URLSearchParams(window.parent.location.search).get(name);
+
+            }
+
+            
+
+            // If still not found, try to get from localStorage
+
+            if (!value) {
+
+                value = localStorage.getItem('auth_token');
+
+            }
+
+            
+
+            console.log('Token found:', value ? 'yes' : 'no'); // Debug log
+
+            return value;
+
+        } catch (e) {
+
+            console.log('Error getting token:', e); // Debug log
+
+            return localStorage.getItem('auth_token');
+
+        }
+
+    }
+
+
+
+    // Add function to store token
+
+    function storeToken(token) {
+
+        if (token) {
+
+            localStorage.setItem('auth_token', token);
+
+            console.log('Token stored in localStorage'); // Debug log
+
+        }
+
+    }
+
+
+
+    // When page loads, try to get and store token
+
+    const token = getUrlParameter('token');
+
+    if (token) {
+
+        storeToken(token);
 
     }
 
@@ -256,17 +318,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const storyContent = document.getElementById('story-content').textContent;
 
-            const token = getUrlParameter('token'); // Get token from URL
+            const token = getUrlParameter('token') || localStorage.getItem('auth_token');
 
             
 
-            console.log('Token from URL:', token); // Debug log
+            console.log('Using token:', token ? 'yes' : 'no'); // Debug log
 
             
+
+            if (!token) {
+
+                showError('No authentication token available. Please refresh the page.');
+
+                return;
+
+            }
+
+
 
             try {
-
-                console.log('Sending request with token:', token); // Debug log
 
                 const response = await fetch('/send-to-chat', {
 
@@ -290,11 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-                console.log('Response status:', response.status); // Debug log
-
                 const data = await response.json();
-
-                console.log('Response data:', data); // Debug log
 
 
 
@@ -312,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } catch (error) {
 
-                console.error('Error:', error); // Debug log
+                console.error('Error:', error);
 
                 showError(error.message);
 
