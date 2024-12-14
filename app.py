@@ -34,46 +34,6 @@ story_history = []
 
 
 
-# HTTPS redirection and token handling
-
-@app.before_request
-
-def before_request():
-
-    print("Request URL:", request.url)  # Debug log
-
-    print("Query parameters:", request.args)  # Debug log
-
-    
-
-    # Handle HTTPS redirect
-
-    if not request.is_secure and app.env != "development":
-
-        url = request.url.replace("http://", "https://", 1)
-
-        return redirect(url, code=301)
-
-    
-
-    # Extract token from query parameter
-
-    token = request.args.get('token')
-
-    print("Token from query:", token)  # Debug log
-
-    
-
-    # Store token in session if available
-
-    if token:
-
-        session['auth_token'] = token
-
-        print(f"Stored token in session: {token[:10]}...")  # Debug log
-
-
-
 def generate_image(story):
 
     API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
@@ -128,11 +88,9 @@ def generate_image(story):
 
 def home():
 
-    # Get token from query parameter and pass it to template
+    # Simplify to just render the template
 
-    token = request.args.get('token')
-
-    return render_template('index.html', history=story_history, token=token)
+    return render_template('index.html', history=story_history)
 
 
 
@@ -306,21 +264,15 @@ def send_to_chat():
 
     try:
 
-        print("Request JSON:", request.json)  # Debug log
+        # Get data from request
 
-        print("Query params:", request.args)  # Debug log
+        data = request.json
 
-        print("Session:", dict(session))  # Debug log
+        auth_token = data.get('token')
 
+        tool_id = data.get('tool_id')
 
-
-        # Get token from request body first, then session
-
-        auth_token = request.json.get('token')
-
-        
-
-        print("Token from request:", auth_token[:10] if auth_token else None)  # Debug log
+        story = data.get('story')
 
 
 
@@ -330,15 +282,9 @@ def send_to_chat():
 
 
 
-        story = request.json.get('story')
-
         if not story:
 
             return jsonify({'error': 'No story provided'}), 400
-
-
-
-        print(f"Sending story to chat with token: {auth_token[:10]}...")  # Debug log
 
 
 
@@ -348,7 +294,7 @@ def send_to_chat():
 
         payload = {
 
-            "tool_id": "672ce59cbe603d1ded077a3e",
+            "tool_id": tool_id,
 
             "tool_input": "Generate Turtle Tale",
 
@@ -357,10 +303,6 @@ def send_to_chat():
             "auth_token": auth_token
 
         }
-
-
-
-        print("Sending payload:", {**payload, 'auth_token': auth_token[:10] + '...'})  # Debug log
 
 
 
@@ -382,10 +324,6 @@ def send_to_chat():
 
 
 
-        print("Einstein API response:", response.status_code, response.text)  # Debug log
-
-
-
         if response.ok:
 
             return jsonify({'message': 'Story sent successfully'})
@@ -398,7 +336,7 @@ def send_to_chat():
 
     except Exception as e:
 
-        print("Exception occurred:", str(e))  # Debug log
+        print("Exception occurred:", str(e))
 
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 

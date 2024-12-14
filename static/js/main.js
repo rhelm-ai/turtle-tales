@@ -234,75 +234,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getUrlParameter(name) {
 
-        try {
+        const urlParams = new URLSearchParams(window.location.search);
 
-            // First try to get from current URL
-
-            let value = new URLSearchParams(window.location.search).get(name);
-
-            
-
-            // If not found and we're in an iframe, try to get from parent
-
-            if (!value && window.parent !== window) {
-
-                // Try to get from parent's URL if possible
-
-                value = new URLSearchParams(window.parent.location.search).get(name);
-
-            }
-
-            
-
-            // If still not found, try to get from localStorage
-
-            if (!value) {
-
-                value = localStorage.getItem('auth_token');
-
-            }
-
-            
-
-            console.log('Token found:', value ? 'yes' : 'no'); // Debug log
-
-            return value;
-
-        } catch (e) {
-
-            console.log('Error getting token:', e); // Debug log
-
-            return localStorage.getItem('auth_token');
-
-        }
-
-    }
-
-
-
-    // Add function to store token
-
-    function storeToken(token) {
-
-        if (token) {
-
-            localStorage.setItem('auth_token', token);
-
-            console.log('Token stored in localStorage'); // Debug log
-
-        }
-
-    }
-
-
-
-    // When page loads, try to get and store token
-
-    const token = getUrlParameter('token');
-
-    if (token) {
-
-        storeToken(token);
+        return urlParams.get(name);
 
     }
 
@@ -318,17 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const storyContent = document.getElementById('story-content').textContent;
 
-            const token = getUrlParameter('token') || localStorage.getItem('auth_token');
+            const token = getUrlParameter('token');
 
-            
-
-            console.log('Using token:', token ? 'yes' : 'no'); // Debug log
+            const toolId = getUrlParameter('tool_id');
 
             
 
             if (!token) {
 
-                showError('No authentication token available. Please refresh the page.');
+                showError('No authentication token available.');
 
                 return;
 
@@ -352,7 +284,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         story: storyContent,
 
-                        token: token
+                        token: token,
+
+                        tool_id: toolId
 
                     })
 
