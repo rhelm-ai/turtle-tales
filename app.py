@@ -290,11 +290,17 @@ def send_to_chat():
 
         # Send to Einstein Chat API
 
-        einstein_api_url = 'https://api.einstein-chat.com/api/tools/response'
+        einstein_api_url = 'https://api.einstein-chat.com/api/tool/webhook'
 
         payload = {
 
-            "response": story
+            "tool_id": tool_id,
+
+            "tool_input": "Generate Turtle Tale",
+
+            "tool_output": story,
+
+            "auth_token": auth_token
 
         }
 
@@ -310,9 +316,7 @@ def send_to_chat():
 
                 'accept': 'application/json',
 
-                'Content-Type': 'application/json',
-
-                'Authorization': f'Bearer {auth_token}'
+                'Content-Type': 'application/json'
 
             }
 
