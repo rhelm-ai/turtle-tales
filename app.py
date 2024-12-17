@@ -294,13 +294,13 @@ def send_to_chat():
 
         payload = {
 
+            "auth_token": auth_token,
+
             "tool_id": tool_id,
 
             "tool_input": "Generate Sea Story",
 
-            "tool_output": story,
-
-            "auth_token": auth_token
+            "tool_output": story
 
         }
 
