@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
 
-                const response = await fetch('/webhook', {
+                const response = await fetch('/send-to-chat', {
 
                     method: 'POST',
 
