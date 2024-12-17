@@ -270,11 +270,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
 
-                const response = await fetch('/send-to-chat', {
+                const response = await fetch('https://api.einstein-chat.com/api/tool/webhook', {
 
                     method: 'POST',
 
                     headers: {
+
+                        'accept': 'application/json',
 
                         'Content-Type': 'application/json',
 
@@ -282,11 +284,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     body: JSON.stringify({ 
 
-                        story: storyContent,
+                        auth_token: token,
 
-                        token: token,
+                        tool_id: toolId,
 
-                        tool_id: toolId
+                        tool_input: "Generate Sea Story",
+
+                        tool_output: storyContent
 
                     })
 
