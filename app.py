@@ -296,7 +296,7 @@ def send_to_chat():
 
             "tool_id": tool_id,
 
-            "tool_input": "Generate Sea Story",
+            "tool_input": "Hello",
 
             "tool_output": story,
 
