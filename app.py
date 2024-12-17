@@ -258,7 +258,7 @@ def generate_story():
 
 
 
-@app.route('/webhook', methods=['POST'])
+@app.route('/send-to-chat', methods=['POST'])
 
 def send_to_chat():
 
