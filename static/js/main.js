@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
 
-                const response = await fetch('/send-to-chat', {
+                const response = await fetch('/webhook', {
 
                     method: 'POST',
 
@@ -282,11 +282,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     body: JSON.stringify({ 
 
-                        story: storyContent,
+                        auth_token: token,
 
-                        token: token,
+                        tool_id: toolId,
 
-                        tool_id: toolId
+                        tool_input: "Generate Sea Story",
+
+                        tool_output: storyContent
 
                     })
 
