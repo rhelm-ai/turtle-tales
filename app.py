@@ -290,7 +290,7 @@ def send_to_chat():
 
         # Send to Einstein Chat API
 
-        einstein_api_url = 'https://sea-stories.roket-ai.com/send-to-chat'
+        einstein_api_url = 'https://api.einstein-chat.com/api/tool/webhook'
 
         payload = {
 
