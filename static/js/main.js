@@ -252,6 +252,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const storyContent = document.getElementById('story-content').textContent;
 
+            const description = document.getElementById('turtle-description').value;
+
             const token = getUrlParameter('token');
 
             const toolId = getUrlParameter('tool_id');
@@ -283,6 +285,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ 
 
                         story: storyContent,
+
+                        description: description,
 
                         token: token,
 

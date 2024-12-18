@@ -274,6 +274,8 @@ def send_to_chat():
 
         story = data.get('story')
 
+        description = data.get('description')
+
 
 
         if not auth_token:
@@ -296,7 +298,7 @@ def send_to_chat():
 
             "tool_id": tool_id,
 
-            "tool_input": "Hello",
+            "tool_input": description,
 
             "tool_output": story,
 
