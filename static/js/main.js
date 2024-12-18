@@ -194,7 +194,93 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <p class="story">📖 ${entry.story}</p>
 
+                <button class="share-btn story-btn history-share-btn">
+
+                    <span>📝 Send Story to Chat</span>
+
+                </button>
+
             `;
+
+
+
+            // Add click handler for the history share button
+
+            const shareBtn = div.querySelector('.history-share-btn');
+
+            shareBtn.addEventListener('click', async () => {
+
+                const token = getUrlParameter('token');
+
+                const toolId = getUrlParameter('tool_id');
+
+                
+
+                if (!token) {
+
+                    showError('No authentication token available.');
+
+                    return;
+
+                }
+
+
+
+                try {
+
+                    const response = await fetch('/send-to-chat', {
+
+                        method: 'POST',
+
+                        headers: {
+
+                            'Content-Type': 'application/json',
+
+                        },
+
+                        body: JSON.stringify({ 
+
+                            story: entry.story,
+
+                            description: entry.description,
+
+                            token: token,
+
+                            tool_id: toolId
+
+                        })
+
+                    });
+
+
+
+                    const data = await response.json();
+
+
+
+                    if (!response.ok) {
+
+                        throw new Error(data.error || 'Failed to send story to chat');
+
+                    }
+
+
+
+                    showSuccess('Story sent to chat successfully! ✨');
+
+
+
+                } catch (error) {
+
+                    console.error('Error:', error);
+
+                    showError(error.message);
+
+                }
+
+            });
+
+
 
             storyHistory.appendChild(div);
 
